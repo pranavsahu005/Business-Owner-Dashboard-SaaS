@@ -1,0 +1,6 @@
+{
+  "name": "intelly • Clinical Suite",
+  "description": "A high-fidelity patient billing, scheduling, and medical learning platform modeled on the elegant Intelly and Dei UI designs, complete with interactive patient scheduling, smart invoices, clinical logs, and Gemini-powered smart assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
