@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Intelly Interactive Clinical Calendar and Day Agenda">
+  <rect width="1280" height="720" rx="22" fill="#F6F2EA"/>
+  <text x="54" y="68" fill="#1D1B19" font-family="Georgia, serif" font-size="28" font-weight="700">Clinical Calendar &amp; Milestones</text>
+  <text x="54" y="92" fill="#7A7167" font-family="Inter, sans-serif" font-size="12">Full-month clinical planner with category filtering, day agenda, and one-click event scheduling</text>
+  <rect x="1090" y="42" width="136" height="38" rx="19" fill="#C87D55"/>
+  <text x="1122" y="65" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">+ New Event</text>
+
+  <!-- Left Calendar Grid Card -->
+  <rect x="54" y="122" width="796" height="560" rx="24" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="86" y="166" fill="#1D1B19" font-family="Georgia, serif" font-size="22" font-weight="700">November 2026</text>
+  <rect x="266" y="146" width="60" height="26" rx="8" fill="#FAF7F2" stroke="#E4DCCF"/>
+  <text x="280" y="163" fill="#5E564E" font-family="Inter, sans-serif" font-size="11" font-weight="600">Today</text>
+
+  <!-- Weekday Header -->
+  <text x="116" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Sun</text>
+  <text x="220" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Mon</text>
+  <text x="324" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Tue</text>
+  <text x="428" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Wed</text>
+  <text x="532" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Thu</text>
+  <text x="636" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Fri</text>
+  <text x="740" y="206" fill="#8C8378" font-family="Inter, sans-serif" font-size="11" font-weight="600">Sat</text>
+
+  <!-- Sample Calendar Cells -->
+  <rect x="86" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="98" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">15</text>
+
+  <rect x="192" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="204" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">16</text>
+
+  <rect x="298" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="310" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">17</text>
+
+  <rect x="404" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="416" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">18</text>
+  <rect x="412" y="276" width="82" height="22" rx="6" fill="#EEF2FF" stroke="#C7D2FE"/>
+  <text x="418" y="291" fill="#4338CA" font-family="Inter, sans-serif" font-size="9">CME Workshop</text>
+
+  <rect x="510" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="522" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">19</text>
+
+  <rect x="616" y="222" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="628" y="244" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">20</text>
+
+  <!-- Active Selected Day: 21 -->
+  <rect x="722" y="222" width="98" height="96" rx="14" fill="#FAF1E8" stroke="#C87D55" stroke-width="1.8"/>
+  <circle cx="742" cy="240" r="11" fill="#171614"/>
+  <text x="735" y="244" fill="#FFFFFF" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">21</text>
+  <rect x="730" y="260" width="82" height="20" rx="6" fill="#FAF0D7" stroke="#EED89A"/>
+  <text x="735" y="274" fill="#9A6F25" font-family="Inter, sans-serif" font-size="9">Q4 Forecast</text>
+  <rect x="730" y="284" width="82" height="20" rx="6" fill="#FCE4EC" stroke="#F8BBD0"/>
+  <text x="735" y="298" fill="#AD1457" font-family="Inter, sans-serif" font-size="9">Rachel Check</text>
+
+  <!-- Second Row -->
+  <rect x="86" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="98" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">22</text>
+
+  <rect x="192" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="204" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">23</text>
+  <rect x="200" y="384" width="82" height="22" rx="6" fill="#E8F8F5" stroke="#B2DFDB"/>
+  <text x="206" y="399" fill="#117A65" font-family="Inter, sans-serif" font-size="9">CKD Audit</text>
+
+  <rect x="298" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="310" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">24</text>
+
+  <rect x="404" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="416" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">25</text>
+  <rect x="412" y="384" width="82" height="22" rx="6" fill="#FAF0D7" stroke="#EED89A"/>
+  <text x="418" y="399" fill="#9A6F25" font-family="Inter, sans-serif" font-size="9">GEICO Batch</text>
+
+  <rect x="510" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="522" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">26</text>
+
+  <rect x="616" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="628" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">27</text>
+  <rect x="624" y="384" width="82" height="22" rx="6" fill="#E8F8F5" stroke="#B2DFDB"/>
+  <text x="630" y="399" fill="#117A65" font-family="Inter, sans-serif" font-size="9">Samantha Ex</text>
+
+  <rect x="722" y="330" width="98" height="96" rx="14" fill="#FAF7F2" stroke="#ECE6DC"/>
+  <text x="734" y="352" fill="#5E564E" font-family="'JetBrains Mono', monospace" font-size="12">28</text>
+
+  <!-- Right Panel: Selected Day Agenda -->
+  <rect x="876" y="122" width="350" height="560" rx="24" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="904" y="158" fill="#C87D55" font-family="Inter, sans-serif" font-size="10" font-weight="700">SELECTED DAY</text>
+  <text x="904" y="184" fill="#1D1B19" font-family="Georgia, serif" font-size="18" font-weight="700">Saturday, Nov 21, 2026</text>
+  <line x1="904" y1="204" x2="1198" y2="204" stroke="#F0E9DF"/>
+
+  <rect x="904" y="224" width="294" height="126" rx="18" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <text x="924" y="254" fill="#1D1B19" font-family="Inter, sans-serif" font-size="13" font-weight="700">Quarterly Revenue &amp; Forecast</text>
+  <text x="924" y="274" fill="#9A6F25" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">Billing · 10:30 AM · Boardroom B</text>
+  <text x="924" y="302" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">Review Q4 insurance collection velocity</text>
+  <text x="924" y="320" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">and December projections with finance.</text>
+
+  <rect x="904" y="368" width="294" height="126" rx="18" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <text x="924" y="398" fill="#1D1B19" font-family="Inter, sans-serif" font-size="13" font-weight="700">Rachel Meyers — Telehealth</text>
+  <text x="924" y="418" fill="#AD1457" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">Follow-up · 02:00 PM · Video Suite</text>
+  <text x="924" y="446" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">Review blood panel lab metrics and</text>
+  <text x="924" y="464" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">confirm prescription dosage adjustment.</text>
+</svg>

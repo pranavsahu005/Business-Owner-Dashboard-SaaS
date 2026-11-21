@@ -18,6 +18,8 @@ import {
 import DownloadReportMenu from './DownloadReportMenu';
 import CalendarWorkspace from './CalendarWorkspace';
 import NotesWorkspace from './NotesWorkspace';
+import D3RevenueChart from './D3RevenueChart';
+import ClinicalInfographics from './ClinicalInfographics';
 import { computeFilteredAnalytics } from '../utils/analyticsData';
 import { 
   Search, 
@@ -251,19 +253,19 @@ export default function MainDashboard() {
   const isDark = themeMode === 'dark' || themeMode === 'galaxy';
 
   const cardStyle = themeMode === 'galaxy' 
-    ? 'bg-[#0E0C22]/85 border border-indigo-950/70 text-stone-100 shadow-[0_8px_32px_rgba(99,102,241,0.08)] backdrop-blur-md p-6 rounded-[24px]' 
+    ? 'bg-[#100E24]/90 border border-indigo-950/70 text-stone-100 shadow-[0_8px_28px_rgba(99,102,241,0.08)] p-6 rounded-[24px]' 
     : themeMode === 'dark'
-    ? 'bg-[#18181B]/95 border border-zinc-800/80 text-stone-100 shadow-md backdrop-blur-md p-6 rounded-[24px]'
-    : 'bg-white border border-stone-200/60 text-stone-800 shadow-xs p-6 rounded-[24px]';
+    ? 'bg-[#191817] border border-[#2A2825] text-stone-100 p-6 rounded-[24px]'
+    : 'bg-[#FFFEFC] border border-[#EAE3D7] text-[#221F1D] shadow-[0_2px_16px_rgba(34,31,29,0.03)] p-6 rounded-[24px]';
 
   const inputStyle = themeMode === 'galaxy'
     ? 'bg-[#15122E] border border-indigo-900/60 text-stone-100 placeholder-indigo-400/70 focus:border-indigo-400 py-2 px-3 rounded-xl outline-none text-xs transition-all'
     : themeMode === 'dark'
-    ? 'bg-[#121214] border border-[#2D2A33] text-stone-100 placeholder-stone-500 focus:border-stone-600 py-2 px-3 rounded-xl outline-none text-xs transition-all'
-    : 'bg-[#FAF8F5] border border-stone-200 text-stone-800 placeholder-stone-400 focus:border-stone-400 py-2 px-3 rounded-xl outline-none text-xs transition-all';
+    ? 'bg-[#121110] border border-[#2D2A26] text-stone-100 placeholder-stone-500 focus:border-[#524C45] py-2 px-3 rounded-xl outline-none text-xs transition-all'
+    : 'bg-[#F8F4EC] border border-[#E6DFD4] text-[#221F1D] placeholder-stone-400 focus:border-[#C87D55] py-2 px-3 rounded-xl outline-none text-xs transition-all';
 
-  const textMuted = isDark ? 'text-stone-400' : 'text-stone-500';
-  const headingStyle = isDark ? 'text-white' : 'text-stone-900';
+  const textMuted = isDark ? 'text-stone-400' : 'text-[#7A7167]';
+  const headingStyle = isDark ? 'text-[#F6F2EA]' : 'text-[#1D1B19]';
 
   const getAccentText = () => {
     switch (themeColor) {
@@ -493,12 +495,20 @@ export default function MainDashboard() {
 
               </div>
 
-              {/* Right Side: Waiting for bills list and Latest transactions */}
+              {/* Right Side: D3 Revenue Trend Chart, Waiting for bills list and Latest transactions */}
               <div className="xl:col-span-8 flex flex-col gap-6">
                 
+                {/* Interactive D3.js Monthly Revenue Trend Chart */}
+                <D3RevenueChart
+                  data={analytics.timeSeries}
+                  title="Monthly Revenue Trend"
+                  subtitle="D3.js spline visualization synced with TopNavigation date range"
+                  height={250}
+                />
+
                 {/* Waiting for bills row */}
                 <div>
-                  <h3 className="text-lg font-serif font-semibold text-stone-800 mb-3">
+                  <h3 className={`text-lg font-serif font-semibold mb-3 ${headingStyle}`}>
                     Waiting for bills
                   </h3>
                   
@@ -1154,76 +1164,17 @@ export default function MainDashboard() {
               </div>
             </div>
 
-            {/* Recharts Analytical & Forecast Graphs */}
+            {/* Primary D3.js Monthly Revenue & Forecast Chart + Consultation Mix */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               
-              {/* Revenue Actuals vs Forward Forecast Composed Chart */}
-              <div className={`lg:col-span-7 ${cardStyle}`}>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-                  <div>
-                    <h3 className={`text-base font-serif font-semibold ${headingStyle}`}>
-                      Clinical Revenue & Forward Forecast
-                    </h3>
-                    <p className="text-[11px] text-stone-400 mt-0.5">
-                      Solid area tracks verified revenue · Dashed line models forward forecast
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 text-[11px] font-sans text-stone-400">
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#F48FB1]" /> Actual
-                    </span>
-                    <span className="inline-flex items-center gap-1.5">
-                      <span className="w-2.5 h-0.5 bg-[#80CBC4]" /> Forecast
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart
-                      data={analytics.timeSeries}
-                      margin={{ top: 10, right: 12, left: -12, bottom: 0 }}
-                    >
-                      <defs>
-                        <linearGradient id="actualRevGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#F48FB1" stopOpacity={0.32} />
-                          <stop offset="95%" stopColor="#F48FB1" stopOpacity={0.02} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255,255,255,0.06)' : '#f0ece6'} vertical={false} />
-                      <XAxis dataKey="label" stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: isDark ? '#18181B' : '#FFFFFF',
-                          borderColor: isDark ? '#27272A' : '#E7E5E4',
-                          borderRadius: '14px',
-                          fontSize: '12px',
-                        }}
-                        formatter={(value: any, name: string) => [
-                          value !== null && value !== undefined ? `$${Number(value).toLocaleString()}` : 'Projected',
-                          name === 'actualRevenue' ? 'Actual Revenue' : name === 'forecastRevenue' ? 'Forecast Target' : 'Expenses',
-                        ]}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="actualRevenue"
-                        stroke="#F48FB1"
-                        fill="url(#actualRevGrad)"
-                        strokeWidth={2.5}
-                        connectNulls={false}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="forecastRevenue"
-                        stroke="#4DB6AC"
-                        strokeWidth={2.2}
-                        strokeDasharray="6 4"
-                        dot={{ r: 3, fill: '#4DB6AC' }}
-                      />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
+              {/* D3.js Interactive Revenue & Forecast Spline Chart */}
+              <div className="lg:col-span-7">
+                <D3RevenueChart
+                  data={analytics.timeSeries}
+                  title="Clinical Revenue & Forward Forecast"
+                  subtitle="Hover any point for D3 precision inspection across actuals, forecast, and costs"
+                  height={295}
+                />
               </div>
 
               {/* Consultation distribution */}
@@ -1731,110 +1682,90 @@ export default function MainDashboard() {
               </div>
             </div>
 
-            {/* Live Business Analytics Dashboard Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Warm Pastel Editorial KPI Row (Obsidian Anchor + Warm Ivory Surfaces) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               
-              {/* Metric 1 */}
-              <div className={cardStyle}>
+              {/* Metric 1: Obsidian Anchor Card */}
+              <div className="rounded-[24px] p-6 bg-[#171614] text-[#FAF7F2] border border-[#2B2824] flex flex-col justify-between shadow-[0_12px_30px_rgba(23,22,20,0.14)]">
                 <div className="flex justify-between items-start mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Collected Revenue</span>
-                  <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500">
+                  <span className="text-[11px] font-medium text-[#B8B0A4]">Collected Revenue</span>
+                  <div className="w-8 h-8 rounded-full bg-white/10 text-[#9EC7B2] flex items-center justify-center">
                     <TrendingUp className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                <div className="text-2xl font-serif font-bold text-white tabular-nums">
                   ${(totalRevenue + analytics.kpis.paymentsReceived).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
-                <div className="text-[10px] text-stone-400 mt-2">
-                  Cleared & settled · {dateRange.label}
+                <div className="text-[11px] text-[#A8A095] mt-2.5 flex items-center gap-2 font-mono tabular-nums">
+                  <span className="text-[#9EC7B2] font-semibold">{analytics.kpis.receivedDelta}</span>
+                  <span>· {dateRange.label}</span>
                 </div>
               </div>
 
-              {/* Metric 2 */}
+              {/* Metric 2: Projected Forecast */}
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Projected Forecast</span>
-                  <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600">
+                  <span className={`text-[11px] font-medium ${textMuted}`}>Projected Forecast</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isDark ? 'bg-[#E5C167]/15 text-[#E5C167]' : 'bg-[#FAF0D7] text-[#9A6F25]'}`}>
                     <Activity className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-[#B06F4B] tabular-nums">
+                <div className={`text-2xl font-serif font-bold tabular-nums ${headingStyle}`}>
                   ${analytics.kpis.projectedRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </div>
-                <div className="text-[10px] text-stone-400 mt-2 font-mono tabular-nums">
-                  {analytics.kpis.forecastGrowthPct >= 0 ? '+' : ''}{analytics.kpis.forecastGrowthPct}% projected growth
+                <div className="text-[11px] text-stone-400 mt-2.5 font-mono tabular-nums">
+                  <span className="text-[#C87D55] font-semibold">
+                    {analytics.kpis.forecastGrowthPct >= 0 ? '+' : ''}{analytics.kpis.forecastGrowthPct}%
+                  </span>{' '}
+                  next interval trend
                 </div>
               </div>
 
-              {/* Metric 3 */}
+              {/* Metric 3: Total Invoices Issued */}
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Total Invoices Issued</span>
-                  <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
+                  <span className={`text-[11px] font-medium ${textMuted}`}>Invoices Issued</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isDark ? 'bg-[#8FB5A3]/15 text-[#8FB5A3]' : 'bg-[#EAF3EE] text-[#45735D]'}`}>
                     <FileText className="w-4 h-4" />
                   </div>
                 </div>
-                <div className={`text-2xl font-serif font-bold tabular-nums ${isDark ? 'text-white' : 'text-stone-900'}`}>
-                  {totalInvoices} ledger lines
+                <div className={`text-2xl font-serif font-bold tabular-nums ${headingStyle}`}>
+                  {totalInvoices} invoices
                 </div>
-                <div className="text-[10px] text-stone-400 mt-2">
-                  ${outstandingRevenue.toLocaleString()} awaiting transfer
+                <div className="text-[11px] text-stone-400 mt-2.5 font-mono tabular-nums">
+                  ${outstandingRevenue.toLocaleString()} awaiting clearance
                 </div>
               </div>
 
-              {/* Metric 4 */}
+              {/* Metric 4: Collection Efficiency */}
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Collection Efficiency</span>
-                  <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-500">
+                  <span className={`text-[11px] font-medium ${textMuted}`}>Collection Rate</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isDark ? 'bg-[#D48A6A]/15 text-[#D48A6A]' : 'bg-[#F8EAE3] text-[#A45937]'}`}>
                     <Award className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-purple-600 dark:text-purple-400 tabular-nums">{collectionRate}%</div>
-                <div className="text-[10px] text-stone-400 mt-2">
-                  {analytics.kpis.totalConsultations} visits in interval
+                <div className={`text-2xl font-serif font-bold tabular-nums ${headingStyle}`}>{collectionRate}%</div>
+                <div className="text-[11px] text-stone-400 mt-2.5 font-mono tabular-nums">
+                  {analytics.kpis.totalConsultations} visits · ${analytics.kpis.avgTicket} avg
                 </div>
               </div>
 
             </div>
 
-            {/* Unified Workspace Pulse: Forecast Sparkline + Today's Calendar + Pinned Notes & Tasks */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Forecast Pulse */}
-              <div className={`${cardStyle} flex flex-col justify-between`}>
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className={`text-sm font-serif font-semibold ${headingStyle}`}>Revenue Forecast Pulse</h3>
-                    <p className="text-[10px] text-stone-400 mt-0.5">{dateRange.label}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab('statistics')}
-                    className="text-[11px] font-semibold text-[#B06F4B] hover:underline cursor-pointer"
-                  >
-                    Full Analytics
-                  </button>
-                </div>
-                <div className="h-32">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={analytics.timeSeries} margin={{ top: 6, right: 6, left: -24, bottom: 0 }}>
-                      <XAxis dataKey="label" stroke="#999" fontSize={9} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#999" fontSize={9} tickLine={false} axisLine={false} tickFormatter={(v) => `${Math.round(v / 1000)}k`} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: isDark ? '#18181B' : '#FFFFFF',
-                          borderColor: isDark ? '#27272A' : '#E7E5E4',
-                          borderRadius: '12px',
-                          fontSize: '11px',
-                        }}
-                      />
-                      <Area type="monotone" dataKey="actualRevenue" stroke="#F48FB1" fill="rgba(244,143,177,0.18)" strokeWidth={2} />
-                      <Line type="monotone" dataKey="forecastRevenue" stroke="#4DB6AC" strokeWidth={2} strokeDasharray="4 3" dot={false} />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
+            {/* Centerpiece D3.js Monthly Revenue Line Chart */}
+            <D3RevenueChart
+              data={analytics.timeSeries}
+              title="Monthly Revenue & Forecast Trends"
+              subtitle="Interactive D3.js spline analytics filtered dynamically by TopNavigation date range"
+              height={300}
+            />
 
+            {/* Editorial D3 Infographics & Utilization Widgets */}
+            <ClinicalInfographics analytics={analytics} collectionRate={collectionRate} />
+
+            {/* Unified Workspace Pulse: Upcoming Calendar + Pinned Notes & Tasks */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Calendar Snapshot */}
               <div className={`${cardStyle} flex flex-col justify-between`}>
                 <div className="flex items-center justify-between mb-3">

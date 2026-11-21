@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Inter", "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -11,7 +12,39 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Luxury UI Customizations */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Warm Editorial Striped Allocation Surface */
+.warm-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(176, 152, 128, 0.14),
+    rgba(176, 152, 128, 0.14) 5px,
+    transparent 5px,
+    transparent 11px
+  );
+}
+
+.dark .warm-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.08) 5px,
+    transparent 5px,
+    transparent 11px
+  );
+}
 
 /* Hide default browser scrollbars across the application */
 ::-webkit-scrollbar {
@@ -59,4 +92,13 @@ html {
 
 .animate-fade-in {
   animation: fade-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

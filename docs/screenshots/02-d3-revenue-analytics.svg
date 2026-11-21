@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Intelly D3.js Monthly Revenue and Forecast Analytics">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F6F2EA"/>
+      <stop offset="100%" stop-color="#F4EDE1"/>
+    </linearGradient>
+    <linearGradient id="sageFill" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#7AA88E" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#7AA88E" stop-opacity="0.02"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" rx="22" fill="url(#bg2)"/>
+  <!-- Sidebar -->
+  <rect x="24" y="24" width="212" height="672" rx="22" fill="#121212"/>
+  <text x="52" y="70" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="18" font-weight="600">intelly</text>
+  <circle cx="114" cy="64" r="4" fill="#EA80FC"/>
+  <rect x="42" y="108" width="176" height="38" rx="11" fill="#FFFFFF" fill-opacity="0.1"/>
+  <text x="64" y="132" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="13" font-weight="500">Home &amp; Invoice</text>
+  <circle cx="200" cy="127" r="3.5" fill="#80CBC4"/>
+  <text x="64" y="174" fill="#A8A29E" font-family="Inter, sans-serif" font-size="13">Dashboard</text>
+  <text x="64" y="212" fill="#A8A29E" font-family="Inter, sans-serif" font-size="13">Calendar</text>
+  <text x="64" y="250" fill="#A8A29E" font-family="Inter, sans-serif" font-size="13">Statistics &amp; reports</text>
+  <text x="64" y="288" fill="#A8A29E" font-family="Inter, sans-serif" font-size="13">Notes &amp; Tasks</text>
+
+  <!-- Top Bar -->
+  <rect x="264" y="26" width="380" height="38" rx="19" fill="#FFFEFC" stroke="#E7E0D5"/>
+  <text x="292" y="49" fill="#9A9186" font-family="Inter, sans-serif" font-size="12">Search patients, files, bills...</text>
+  <rect x="748" y="26" width="236" height="38" rx="19" fill="#FFFEFC" stroke="#E7E0D5"/>
+  <text x="772" y="49" fill="#221F1D" font-family="Inter, sans-serif" font-size="12" font-weight="600">This Quarter (90d)</text>
+  <text x="892" y="49" fill="#9A9186" font-family="'JetBrains Mono', monospace" font-size="10">Aug–Nov</text>
+  <rect x="996" y="26" width="82" height="38" rx="19" fill="#FFFEFC" stroke="#E7E0D5"/>
+  <text x="1020" y="49" fill="#221F1D" font-family="Inter, sans-serif" font-size="12" font-weight="600">Notes</text>
+  <rect x="1090" y="26" width="38" height="38" rx="19" fill="#FFFEFC" stroke="#E7E0D5"/>
+  <circle cx="1109" cy="45" r="6" fill="none" stroke="#5C534A" stroke-width="1.8"/>
+  <rect x="1142" y="26" width="110" height="38" rx="19" fill="#171614"/>
+  <circle cx="1166" cy="45" r="4" fill="#FFFFFF"/>
+  <circle cx="1197" cy="45" r="4" fill="#DF9CA9"/>
+  <circle cx="1228" cy="45" r="4" fill="#FFFFFF"/>
+
+  <!-- Page Header -->
+  <text x="264" y="114" fill="#1D1B19" font-family="Georgia, serif" font-size="28" font-weight="700">Business Owner &amp; Invoice Center</text>
+  <text x="264" y="135" fill="#7A7167" font-family="Inter, sans-serif" font-size="12">Interactive D3.js monthly revenue trends filtered by This Quarter (90d)</text>
+  <rect x="942" y="88" width="152" height="38" rx="19" fill="#171614"/>
+  <text x="968" y="111" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="600">Download Report</text>
+  <rect x="1104" y="88" width="148" height="38" rx="19" fill="#80CBC4"/>
+  <text x="1126" y="111" fill="#171614" font-family="Inter, sans-serif" font-size="12" font-weight="700">+ New Invoice</text>
+
+  <!-- 4 KPI Cards (1 Obsidian Anchor + 3 Warm Ivory) -->
+  <rect x="264" y="160" width="234" height="114" rx="22" fill="#171614"/>
+  <text x="286" y="190" fill="#B8B0A4" font-family="Inter, sans-serif" font-size="11" font-weight="500">Collected Revenue</text>
+  <text x="286" y="230" fill="#FFFFFF" font-family="Georgia, serif" font-size="24" font-weight="700">$73,430.00</text>
+  <text x="286" y="256" fill="#9EC7B2" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">+18.6% · 90d</text>
+
+  <rect x="514" y="160" width="234" height="114" rx="22" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="536" y="190" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">Projected Forecast</text>
+  <text x="536" y="230" fill="#1D1B19" font-family="Georgia, serif" font-size="24" font-weight="700">$71,500.00</text>
+  <text x="536" y="256" fill="#C87D55" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">+8.6% next interval</text>
+
+  <rect x="764" y="160" width="234" height="114" rx="22" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="786" y="190" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">Invoices Issued</text>
+  <text x="786" y="230" fill="#1D1B19" font-family="Georgia, serif" font-size="24" font-weight="700">3 invoices</text>
+  <text x="786" y="256" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="11">$2,350 awaiting transfer</text>
+
+  <rect x="1014" y="160" width="238" height="114" rx="22" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="1036" y="190" fill="#7A7167" font-family="Inter, sans-serif" font-size="11">Collection Rate</text>
+  <text x="1036" y="230" fill="#1D1B19" font-family="Georgia, serif" font-size="24" font-weight="700">86%</text>
+  <text x="1036" y="256" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="11">638 visits · $143 avg</text>
+
+  <!-- Main D3.js Spline Chart Card -->
+  <rect x="264" y="294" width="988" height="398" rx="24" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="294" y="334" fill="#1D1B19" font-family="Georgia, serif" font-size="20" font-weight="700">Monthly Revenue &amp; Forecast Trends</text>
+  <text x="294" y="355" fill="#8C8378" font-family="Inter, sans-serif" font-size="12">Interactive D3.js Catmull-Rom spline comparing verified monthly revenue against forward projections</text>
+
+  <!-- Mode Switch -->
+  <rect x="1008" y="312" width="214" height="34" rx="11" fill="#F5F0E7" stroke="#E8E0D4"/>
+  <rect x="1012" y="316" width="70" height="26" rx="8" fill="#171614"/>
+  <text x="1024" y="333" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="11" font-weight="600">Revenue</text>
+  <text x="1093" y="333" fill="#6E665D" font-family="Inter, sans-serif" font-size="11">Net Margin</text>
+  <text x="1174" y="333" fill="#6E665D" font-family="Inter, sans-serif" font-size="11">Visits</text>
+
+  <!-- Gridlines -->
+  <line x1="330" y1="420" x2="1210" y2="420" stroke="#EFE9DF" stroke-dasharray="4 4"/>
+  <line x1="330" y1="490" x2="1210" y2="490" stroke="#EFE9DF" stroke-dasharray="4 4"/>
+  <line x1="330" y1="560" x2="1210" y2="560" stroke="#EFE9DF" stroke-dasharray="4 4"/>
+  <line x1="330" y1="630" x2="1210" y2="630" stroke="#EFE9DF" stroke-dasharray="4 4"/>
+
+  <text x="292" y="424" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">$36k</text>
+  <text x="292" y="494" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">$28k</text>
+  <text x="292" y="564" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">$20k</text>
+  <text x="292" y="634" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">$14k</text>
+
+  <!-- Area under D3 Spline -->
+  <path d="M 350 612 C 440 582, 510 568, 600 526 C 690 484, 780 478, 865 452 C 940 429, 980 436, 1020 428 L 1020 630 L 350 630 Z" fill="url(#sageFill)"/>
+  <!-- Actual D3 Spline -->
+  <path d="M 350 612 C 440 582, 510 568, 600 526 C 690 484, 780 478, 865 452 C 940 429, 980 436, 1020 428" fill="none" stroke="#6D9E83" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- Forecast Dashed D3 Spline -->
+  <path d="M 350 618 C 440 594, 510 572, 600 538 C 690 502, 780 486, 865 462 C 950 438, 1045 418, 1188 394" fill="none" stroke="#DCA452" stroke-width="2.4" stroke-dasharray="6 5" stroke-linecap="round"/>
+
+  <!-- Interactive Hover Guide & Floating Tooltip -->
+  <line x1="865" y1="392" x2="865" y2="630" stroke="#B8AEA0" stroke-width="1.4" stroke-dasharray="4 4"/>
+  <circle cx="865" cy="452" r="10" fill="#6D9E83" fill-opacity="0.2"/>
+  <circle cx="865" cy="452" r="5.5" fill="#6D9E83" stroke="#FFFFFF" stroke-width="2.5"/>
+  <circle cx="865" cy="462" r="4.5" fill="#DCA452" stroke="#FFFFFF" stroke-width="2"/>
+
+  <rect x="765" y="366" width="204" height="76" rx="14" fill="#FFFEFC" stroke="#E6DFD4"/>
+  <text x="781" y="385" fill="#8C8378" font-family="Inter, sans-serif" font-size="10" font-weight="600">OCT 26 · VERIFIED</text>
+  <text x="781" y="410" fill="#1D1B19" font-family="Georgia, serif" font-size="20" font-weight="700">$30,400</text>
+  <text x="781" y="428" fill="#DCA452" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600">Forecast: $29,600 (+2.7%)</text>
+
+  <!-- X-Axis Labels -->
+  <text x="342" y="658" fill="#8C8378" font-family="Inter, sans-serif" font-size="11">Jun 26</text>
+  <text x="502" y="658" fill="#8C8378" font-family="Inter, sans-serif" font-size="11">Jul 26</text>
+  <text x="668" y="658" fill="#8C8378" font-family="Inter, sans-serif" font-size="11">Aug 26</text>
+  <text x="844" y="658" fill="#1D1B19" font-family="Inter, sans-serif" font-size="11" font-weight="700">Oct 26</text>
+  <text x="1002" y="658" fill="#8C8378" font-family="Inter, sans-serif" font-size="11">Nov 26</text>
+  <text x="1142" y="658" fill="#DCA452" font-family="Inter, sans-serif" font-size="11" font-weight="600">Dec 26 (Est)</text>
+</svg>

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Intelly Clinical Notes and Daily Checklist">
+  <rect width="1280" height="720" rx="22" fill="#F6F2EA"/>
+  <text x="54" y="68" fill="#1D1B19" font-family="Georgia, serif" font-size="28" font-weight="700">Clinical Notes &amp; Daily Checklist</text>
+  <text x="54" y="92" fill="#7A7167" font-family="Inter, sans-serif" font-size="12">Color-toned clinical observations, pinned reminders, tag filtering, and priority daily tasks</text>
+  <rect x="1102" y="42" width="124" height="38" rx="19" fill="#171614"/>
+  <text x="1132" y="65" fill="#FFFFFF" font-family="Inter, sans-serif" font-size="12" font-weight="700">+ New Note</text>
+
+  <!-- Notes Grid (2x2) -->
+  <rect x="54" y="128" width="380" height="258" rx="22" fill="#FAF6F1" stroke="#EDE3D8"/>
+  <text x="80" y="160" fill="#C87D55" font-family="Inter, sans-serif" font-size="11" font-weight="700">Billing · Pinned</text>
+  <text x="80" y="192" fill="#1D1B19" font-family="Georgia, serif" font-size="18" font-weight="700">Q4 Revenue &amp; Collection Notes</text>
+  <text x="80" y="226" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">Telemedicine billing cycle averaged 9.2 days</text>
+  <text x="80" y="248" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">to payout this quarter (down from 14 days).</text>
+  <text x="80" y="270" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">Prioritize automated reminders for claims.</text>
+  <line x1="80" y1="336" x2="408" y2="336" stroke="#EAE0D5"/>
+  <text x="80" y="362" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">#Q4  #Revenue  #Insurance</text>
+
+  <rect x="454" y="128" width="380" height="258" rx="22" fill="#EFF8F5" stroke="#D3ECE5"/>
+  <text x="480" y="160" fill="#45735D" font-family="Inter, sans-serif" font-size="11" font-weight="700">Patient Follow-up · Pinned</text>
+  <text x="480" y="192" fill="#1D1B19" font-family="Georgia, serif" font-size="18" font-weight="700">Rachel Meyers Observations</text>
+  <text x="480" y="226" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">Patient reported improved energy levels</text>
+  <text x="480" y="248" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">after dosage adjustment. Double-check latest</text>
+  <text x="480" y="270" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">metabolic panel during 2:00 PM video consult.</text>
+  <line x1="480" y1="336" x2="808" y2="336" stroke="#D8EAE3"/>
+  <text x="480" y="362" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">#Telehealth  #Labs</text>
+
+  <rect x="54" y="408" width="380" height="258" rx="22" fill="#F0F6FB" stroke="#D6E6F2"/>
+  <text x="80" y="440" fill="#3B6E8C" font-family="Inter, sans-serif" font-size="11" font-weight="700">Meeting</text>
+  <text x="80" y="472" fill="#1D1B19" font-family="Georgia, serif" font-size="18" font-weight="700">Team Planning Agenda</text>
+  <text x="80" y="506" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">1. Onboard new resident onto ICD-10 codes.</text>
+  <text x="80" y="528" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">2. Confirm holiday coverage roster for Dec.</text>
+  <text x="80" y="550" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">3. Standardize geriatric intake workflow.</text>
+  <line x1="80" y1="616" x2="408" y2="616" stroke="#DBE7F0"/>
+  <text x="80" y="642" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">#Team  #Operations</text>
+
+  <rect x="454" y="408" width="380" height="258" rx="22" fill="#F6F1FC" stroke="#E4D7F5"/>
+  <text x="480" y="440" fill="#7E57A6" font-family="Inter, sans-serif" font-size="11" font-weight="700">Clinical</text>
+  <text x="480" y="472" fill="#1D1B19" font-family="Georgia, serif" font-size="18" font-weight="700">Pharmacology CME Notes</text>
+  <text x="480" y="506" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">Key update on renal dosing thresholds for</text>
+  <text x="480" y="528" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">elderly outpatients with Stage 3 CKD.</text>
+  <text x="480" y="550" fill="#5E564E" font-family="Inter, sans-serif" font-size="12">Reference bookmarked in Documents Base.</text>
+  <line x1="480" y1="616" x2="808" y2="616" stroke="#E4D9F2"/>
+  <text x="480" y="642" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="10">#CKD  #Protocol</text>
+
+  <!-- Right Column: Daily Checklist -->
+  <rect x="860" y="128" width="366" height="538" rx="24" fill="#FFFEFC" stroke="#EAE3D7"/>
+  <text x="888" y="168" fill="#1D1B19" font-family="Georgia, serif" font-size="20" font-weight="700">Daily Checklist</text>
+  <text x="888" y="190" fill="#8C8378" font-family="'JetBrains Mono', monospace" font-size="11">1 of 4 completed (25%)</text>
+  <rect x="888" y="206" width="310" height="7" rx="3.5" fill="#F1ECE3"/>
+  <rect x="888" y="206" width="84" height="7" rx="3.5" fill="#6D9E83"/>
+
+  <rect x="888" y="236" width="310" height="74" rx="14" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <rect x="904" y="254" width="16" height="16" rx="4" fill="#FFFFFF" stroke="#C6BEB2"/>
+  <text x="932" y="266" fill="#1D1B19" font-family="Inter, sans-serif" font-size="12" font-weight="600">Approve &amp; export Q4 PDF report</text>
+  <text x="932" y="288" fill="#C87D55" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">High · 2026-11-21</text>
+
+  <rect x="888" y="324" width="310" height="74" rx="14" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <rect x="904" y="342" width="16" height="16" rx="4" fill="#FFFFFF" stroke="#C6BEB2"/>
+  <text x="932" y="354" fill="#1D1B19" font-family="Inter, sans-serif" font-size="12" font-weight="600">Request Samantha check-up ($145)</text>
+  <text x="932" y="376" fill="#C87D55" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">High · 2026-11-21</text>
+
+  <rect x="888" y="412" width="310" height="74" rx="14" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <rect x="904" y="430" width="16" height="16" rx="4" fill="#6D9E83"/>
+  <text x="932" y="442" fill="#9A9186" font-family="Inter, sans-serif" font-size="12" text-decoration="line-through">Sign off Tyler Young screen summary</text>
+  <text x="932" y="464" fill="#9A6F25" font-family="'JetBrains Mono', monospace" font-size="10">Medium · Completed</text>
+
+  <rect x="888" y="500" width="310" height="74" rx="14" fill="#FAF7F2" stroke="#EAE3D7"/>
+  <rect x="904" y="518" width="16" height="16" rx="4" fill="#FFFFFF" stroke="#C6BEB2"/>
+  <text x="932" y="530" fill="#1D1B19" font-family="Inter, sans-serif" font-size="12" font-weight="600">Update CPT 99214 table for Q1 2027</text>
+  <text x="932" y="552" fill="#45735D" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">Low · 2026-11-26</text>
+</svg>
