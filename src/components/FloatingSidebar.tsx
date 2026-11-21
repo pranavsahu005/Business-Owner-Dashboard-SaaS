@@ -16,7 +16,9 @@ import {
   Sparkles,
   ChevronLeft,
   ChevronRight,
-  Home
+  Home,
+  CalendarDays,
+  StickyNote
 } from 'lucide-react';
 
 interface SidebarItem {
@@ -28,13 +30,15 @@ interface SidebarItem {
 const GENERAL_ITEMS: SidebarItem[] = [
   { id: 'home', label: 'Home & Invoice', icon: Home },
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'schedule', label: 'Schedule', icon: Calendar },
+  { id: 'calendar', label: 'Calendar', icon: CalendarDays },
+  { id: 'schedule', label: 'Day Schedule', icon: Calendar },
   { id: 'patients', label: 'Patients', icon: Users },
   { id: 'statistics', label: 'Statistics & reports', icon: BarChart3 },
   { id: 'education', label: 'Education', icon: BookOpen },
 ];
 
 const TOOL_ITEMS: SidebarItem[] = [
+  { id: 'notes', label: 'Notes & Tasks', icon: StickyNote },
   { id: 'chat', label: 'Chats & calls', icon: MessageSquare },
   { id: 'billing', label: 'Billing', icon: CreditCard },
   { id: 'documents', label: 'Documents base', icon: FolderHeart },

@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useStore } from '../store';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ResponsiveContainer, 
   AreaChart, 
   Area, 
+  ComposedChart,
+  Line,
+  CartesianGrid,
   XAxis, 
   YAxis, 
   Tooltip,
@@ -12,6 +15,10 @@ import {
   Bar,
   Cell
 } from 'recharts';
+import DownloadReportMenu from './DownloadReportMenu';
+import CalendarWorkspace from './CalendarWorkspace';
+import NotesWorkspace from './NotesWorkspace';
+import { computeFilteredAnalytics } from '../utils/analyticsData';
 import { 
   Search, 
   Plus, 
@@ -96,7 +103,14 @@ export default function MainDashboard() {
     deleteInvoice,
     updateInvoiceStatus,
     sidebarHoverExpand,
-    setSidebarHoverExpand
+    setSidebarHoverExpand,
+    dateRange,
+    setActiveTab,
+    calendarEvents,
+    notes,
+    tasks,
+    setQuickDrawerOpen,
+    setQuickDrawerTab
   } = useStore();
 
   // Local billing filter
@@ -217,8 +231,14 @@ export default function MainDashboard() {
     setIsAddPatientOpen(false);
   };
 
+  // Dynamic analytics computed from active TopNavigation dateRange
+  const analytics = useMemo(
+    () => computeFilteredAnalytics(dateRange, patientBills),
+    [dateRange, patientBills]
+  );
+
   // Billing tab filter logical check
-  const filteredBills = patientBills.filter(bill => {
+  const filteredBills = analytics.filteredBills.filter(bill => {
     if (billingFilter === 'All') return true;
     return bill.type === billingFilter;
   }).filter(bill => {
@@ -311,11 +331,18 @@ export default function MainDashboard() {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            {/* Header Title */}
-            <div>
-              <h1 className="text-3xl font-serif font-semibold tracking-tight text-[#1A1A1A]">
-                Your patients billing & invoices
-              </h1>
+            {/* Header Title & Download Report Action */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className={`text-3xl font-serif font-semibold tracking-tight ${isDark ? 'text-white' : 'text-[#1A1A1A]'}`}>
+                  Your patients billing & invoices
+                </h1>
+                <p className="text-xs text-stone-400 mt-1 font-sans">
+                  Showing analytics for <span className="font-semibold text-[#B06F4B]">{dateRange.label}</span>
+                  <span className="font-mono tabular-nums"> · {dateRange.startDate} to {dateRange.endDate}</span>
+                </p>
+              </div>
+              <DownloadReportMenu viewTitle="Patients Billing & Analytics" />
             </div>
 
             {/* Layout Grid: Circular chart / card metrics left, bills right */}
@@ -391,67 +418,75 @@ export default function MainDashboard() {
                     
                     {/* Centered label */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-3xl font-serif font-bold text-stone-800">23,4k</span>
+                      <span className="text-3xl font-serif font-bold text-stone-800 tabular-nums">
+                        {analytics.kpis.totalBillsFormatted}
+                      </span>
                       <span className="text-[10px] text-stone-400 font-sans tracking-wider uppercase mt-1">Total Bills</span>
                     </div>
                   </div>
 
-                  {/* Period badge inside chart view */}
+                  {/* Period indicator inside chart view */}
                   <div className="mt-4">
-                    <span className="text-[11px] font-sans font-medium text-stone-700 bg-stone-100 py-1 px-3 rounded-full flex items-center gap-1">
-                      This week <ChevronDown className="w-3 h-3 text-stone-700" />
+                    <span className="text-[11px] font-sans font-medium text-stone-700 bg-stone-100 py-1 px-3 rounded-full inline-flex items-center gap-1.5">
+                      {dateRange.label}
                     </span>
                   </div>
                 </div>
 
-                {/* Stacked metric cards matching Image 1 exactly */}
+                {/* Stacked metric cards synced to DateRangePicker */}
                 {/* Payments received */}
-                <div className="bg-[#F8EFE9] rounded-[24px] p-5 border border-[#EFE4DC] relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-[#F8EFE9] rounded-[24px] p-5 border border-[#EFE4DC] relative overflow-hidden flex flex-col justify-between transition-transform duration-200 hover:-translate-y-0.5">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full bg-pink-400" />
                       <span className="text-xs font-sans font-medium text-stone-700">Payments received</span>
                     </div>
-                    <span className="text-[10px] font-sans font-bold text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full">
-                      ↑ 13%
+                    <span className="text-[10px] font-mono tabular-nums font-bold text-pink-700 bg-pink-100 px-2 py-0.5 rounded-full">
+                      {analytics.kpis.receivedDelta}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-serif font-bold text-stone-800">$ 14,568</h3>
-                    <p className="text-[10px] text-stone-500 mt-1">Total receipts value</p>
+                    <h3 className="text-2xl font-serif font-bold text-stone-800 tabular-nums">
+                      $ {analytics.kpis.paymentsReceived.toLocaleString()}
+                    </h3>
+                    <p className="text-[10px] text-stone-500 mt-1">Total receipts value · {dateRange.label}</p>
                   </div>
                 </div>
 
                 {/* Payments requested */}
-                <div className="bg-[#EAF2F8] rounded-[24px] p-5 border border-[#D1E1EC] relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-[#EAF2F8] rounded-[24px] p-5 border border-[#D1E1EC] relative overflow-hidden flex flex-col justify-between transition-transform duration-200 hover:-translate-y-0.5">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
                       <span className="text-xs font-sans font-medium text-stone-700">Payments requested</span>
                     </div>
-                    <span className="text-[10px] font-sans font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
-                      ↓ -6%
+                    <span className="text-[10px] font-mono tabular-nums font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full">
+                      {analytics.kpis.requestedDelta}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-serif font-bold text-stone-800">$ 6,234</h3>
+                    <h3 className="text-2xl font-serif font-bold text-stone-800 tabular-nums">
+                      $ {analytics.kpis.paymentsRequested.toLocaleString()}
+                    </h3>
                     <p className="text-[10px] text-stone-500 mt-1">Total waiting payments value</p>
                   </div>
                 </div>
 
                 {/* Non insurance payments */}
-                <div className="bg-[#FEF9E7] rounded-[24px] p-5 border border-[#F9F0CE] relative overflow-hidden flex flex-col justify-between">
+                <div className="bg-[#FEF9E7] rounded-[24px] p-5 border border-[#F9F0CE] relative overflow-hidden flex flex-col justify-between transition-transform duration-200 hover:-translate-y-0.5">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
                       <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
                       <span className="text-xs font-sans font-medium text-stone-700">Non insurance payments</span>
                     </div>
-                    <span className="text-[10px] font-sans font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
-                      ↓ -17%
+                    <span className="text-[10px] font-mono tabular-nums font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                      {analytics.kpis.nonInsuranceDelta}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-serif font-bold text-stone-800">$ 3,786</h3>
+                    <h3 className="text-2xl font-serif font-bold text-stone-800 tabular-nums">
+                      $ {analytics.kpis.nonInsurance.toLocaleString()}
+                    </h3>
                     <p className="text-[10px] text-stone-500 mt-1">Total value of non-covered payments</p>
                   </div>
                 </div>
@@ -1063,77 +1098,167 @@ export default function MainDashboard() {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            <div>
-              <h1 className="text-3xl font-serif font-semibold tracking-tight text-[#1A1A1A]">
-                Statistics & reports
-              </h1>
-              <p className="text-xs text-stone-400 mt-1">Audit billing cycles, payment trends, and clinical visits</p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className={`text-3xl font-serif font-semibold tracking-tight ${isDark ? 'text-white' : 'text-[#1A1A1A]'}`}>
+                  Statistics, Analytics & Forecast
+                </h1>
+                <p className="text-xs text-stone-400 mt-1">
+                  Interval: <span className="font-semibold text-[#B06F4B]">{dateRange.label}</span>
+                  <span className="font-mono tabular-nums"> · {dateRange.startDate} to {dateRange.endDate}</span>
+                </p>
+              </div>
+              <DownloadReportMenu viewTitle="Clinical Statistics & Revenue Forecast" />
             </div>
 
-            {/* Recharts graphs in gorgeous medical pastel */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Dynamic 4-KPI Summary Row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className={cardStyle}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Actual Revenue</span>
+                <div className={`text-2xl font-serif font-bold tabular-nums mt-2 ${isDark ? 'text-white' : 'text-stone-900'}`}>
+                  ${analytics.kpis.totalRevenue.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-emerald-600 font-medium mt-1 font-mono tabular-nums">
+                  {analytics.kpis.receivedDelta} vs prior interval
+                </p>
+              </div>
+
+              <div className={cardStyle}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Projected Forecast</span>
+                <div className="text-2xl font-serif font-bold tabular-nums mt-2 text-[#B06F4B]">
+                  ${analytics.kpis.projectedRevenue.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-stone-400 mt-1 font-mono tabular-nums">
+                  {analytics.kpis.forecastGrowthPct >= 0 ? '+' : ''}{analytics.kpis.forecastGrowthPct}% lookahead trajectory
+                </p>
+              </div>
+
+              <div className={cardStyle}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Total Consultations</span>
+                <div className={`text-2xl font-serif font-bold tabular-nums mt-2 ${isDark ? 'text-white' : 'text-stone-900'}`}>
+                  {analytics.kpis.totalConsultations.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-stone-400 mt-1">
+                  Telemedicine, clinic & emergency
+                </p>
+              </div>
+
+              <div className={cardStyle}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Avg Revenue / Visit</span>
+                <div className="text-2xl font-serif font-bold tabular-nums mt-2 text-[#117A65]">
+                  ${analytics.kpis.avgTicket.toLocaleString()}
+                </div>
+                <p className="text-[11px] text-stone-400 mt-1">
+                  Net realized clinical yield
+                </p>
+              </div>
+            </div>
+
+            {/* Recharts Analytical & Forecast Graphs */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               
-              {/* Monthly Revenue Chart */}
-              <div className="bg-white border border-stone-200/60 rounded-[24px] p-6 shadow-xs">
-                <div className="flex items-center justify-between mb-6">
+              {/* Revenue Actuals vs Forward Forecast Composed Chart */}
+              <div className={`lg:col-span-7 ${cardStyle}`}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
                   <div>
-                    <h3 className="text-sm font-bold text-stone-800">Monthly Clinical Invoicing</h3>
-                    <p className="text-[10px] text-stone-400 mt-0.5">Includes insurance claim payments</p>
+                    <h3 className={`text-base font-serif font-semibold ${headingStyle}`}>
+                      Clinical Revenue & Forward Forecast
+                    </h3>
+                    <p className="text-[11px] text-stone-400 mt-0.5">
+                      Solid area tracks verified revenue · Dashed line models forward forecast
+                    </p>
                   </div>
-                  <span className="text-xs font-bold text-[#117A65] bg-[#E8F8F5] py-0.5 px-2 rounded-full">+$23,400 target</span>
+                  <div className="flex items-center gap-3 text-[11px] font-sans text-stone-400">
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#F48FB1]" /> Actual
+                    </span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="w-2.5 h-0.5 bg-[#80CBC4]" /> Forecast
+                    </span>
+                  </div>
                 </div>
                 
-                <div className="h-64">
+                <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart
-                      data={[
-                        { name: 'Jan', revenue: 14500 },
-                        { name: 'Feb', revenue: 18200 },
-                        { name: 'Mar', revenue: 16400 },
-                        { name: 'Apr', revenue: 21000 },
-                        { name: 'May', revenue: 23400 },
-                        { name: 'Jun', revenue: 25800 }
-                      ]}
-                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    <ComposedChart
+                      data={analytics.timeSeries}
+                      margin={{ top: 10, right: 12, left: -12, bottom: 0 }}
                     >
-                      <XAxis dataKey="name" stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
-                      <Tooltip />
-                      <Area type="monotone" dataKey="revenue" stroke="#F48FB1" fill="rgba(244,114,182,0.15)" strokeWidth={2.5} />
-                    </AreaChart>
+                      <defs>
+                        <linearGradient id="actualRevGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#F48FB1" stopOpacity={0.32} />
+                          <stop offset="95%" stopColor="#F48FB1" stopOpacity={0.02} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255,255,255,0.06)' : '#f0ece6'} vertical={false} />
+                      <XAxis dataKey="label" stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#888888" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: isDark ? '#18181B' : '#FFFFFF',
+                          borderColor: isDark ? '#27272A' : '#E7E5E4',
+                          borderRadius: '14px',
+                          fontSize: '12px',
+                        }}
+                        formatter={(value: any, name: string) => [
+                          value !== null && value !== undefined ? `$${Number(value).toLocaleString()}` : 'Projected',
+                          name === 'actualRevenue' ? 'Actual Revenue' : name === 'forecastRevenue' ? 'Forecast Target' : 'Expenses',
+                        ]}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="actualRevenue"
+                        stroke="#F48FB1"
+                        fill="url(#actualRevGrad)"
+                        strokeWidth={2.5}
+                        connectNulls={false}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="forecastRevenue"
+                        stroke="#4DB6AC"
+                        strokeWidth={2.2}
+                        strokeDasharray="6 4"
+                        dot={{ r: 3, fill: '#4DB6AC' }}
+                      />
+                    </ComposedChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
               {/* Consultation distribution */}
-              <div className="bg-white border border-stone-200/60 rounded-[24px] p-6 shadow-xs">
+              <div className={`lg:col-span-5 ${cardStyle}`}>
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h3 className="text-sm font-bold text-stone-800">Patient Consultation Mix</h3>
-                    <p className="text-[10px] text-stone-400 mt-0.5">Telemedicine vs Clinic visits</p>
+                    <h3 className={`text-base font-serif font-semibold ${headingStyle}`}>Patient Consultation Mix</h3>
+                    <p className="text-[11px] text-stone-400 mt-0.5">Filtered by {dateRange.label}</p>
                   </div>
-                  <span className="text-xs font-sans text-stone-400">Total: 482 consultations</span>
+                  <span className="text-xs font-mono tabular-nums text-stone-400">
+                    {analytics.kpis.totalConsultations} visits
+                  </span>
                 </div>
 
-                <div className="h-64">
+                <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
-                      data={[
-                        { name: 'Telemedicine', count: 184, fill: '#80CBC4' },
-                        { name: 'In Clinic', count: 242, fill: '#FFE082' },
-                        { name: 'Emergency', count: 56, fill: '#F48FB1' }
-                      ]}
-                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      data={analytics.consultationMix}
+                      margin={{ top: 10, right: 10, left: -16, bottom: 0 }}
                     >
+                      <CartesianGrid strokeDasharray="3 3" stroke={isDark ? 'rgba(255,255,255,0.06)' : '#f0ece6'} vertical={false} />
                       <XAxis dataKey="name" stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis stroke="#888888" fontSize={10} tickLine={false} axisLine={false} />
-                      <Tooltip />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: isDark ? '#18181B' : '#FFFFFF',
+                          borderColor: isDark ? '#27272A' : '#E7E5E4',
+                          borderRadius: '14px',
+                          fontSize: '12px',
+                        }}
+                      />
                       <Bar dataKey="count" radius={[10, 10, 0, 0]}>
-                        {[
-                          <Cell key="0" fill="#80CBC4" />,
-                          <Cell key="1" fill="#FFE082" />,
-                          <Cell key="2" fill="#F48FB1" />
-                        ]}
+                        {analytics.consultationMix.map((entry, idx) => (
+                          <Cell key={`cell-${idx}`} fill={entry.fill} />
+                        ))}
                       </Bar>
                     </BarChart>
                   </ResponsiveContainer>
@@ -1580,26 +1705,30 @@ export default function MainDashboard() {
             transition={{ duration: 0.3 }}
             className="space-y-6"
           >
-            {/* Header Title with Subtitle & Quick Button */}
+            {/* Header Title with Subtitle, Download Report & Quick Invoice Button */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h1 className={`text-3xl font-serif font-semibold tracking-tight ${isDark ? 'text-white' : 'text-stone-900'}`}>
                   Business Owner & Invoice Center
                 </h1>
                 <p className={`text-xs ${textMuted} mt-1`}>
-                  Manage corporate clinical accounts, issue digital invoice receipts, and track administrative revenue.
+                  Manage corporate clinical accounts, export analytical reports, and track revenue for{' '}
+                  <span className="font-semibold text-[#B06F4B]">{dateRange.label}</span>.
                 </p>
               </div>
-              <button
-                onClick={() => {
-                  setInvNumber(`INV-2026-00${invoices.length + 1}`);
-                  setIsNewInvoiceOpen(true);
-                }}
-                className={`flex items-center gap-2 py-2.5 px-5 rounded-full text-xs font-bold shadow-md transition-all scale-100 hover:scale-102 hover:shadow-lg active:scale-98 ${getAccentBg()}`}
-              >
-                <Plus className="w-4 h-4" />
-                Generate New Invoice
-              </button>
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <DownloadReportMenu viewTitle="Business Owner & Invoice Center" />
+                <button
+                  onClick={() => {
+                    setInvNumber(`INV-2026-00${invoices.length + 1}`);
+                    setIsNewInvoiceOpen(true);
+                  }}
+                  className={`flex items-center gap-2 py-2.5 px-5 rounded-full text-xs font-bold shadow-md transition-all cursor-pointer whitespace-nowrap shrink-0 ${getAccentBg()}`}
+                >
+                  <Plus className="w-4 h-4" />
+                  Generate New Invoice
+                </button>
+              </div>
             </div>
 
             {/* Live Business Analytics Dashboard Cards */}
@@ -1613,25 +1742,27 @@ export default function MainDashboard() {
                     <TrendingUp className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-emerald-500">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="text-[10px] text-stone-400 mt-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                  Cleared & settled funds
+                <div className="text-2xl font-serif font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                  ${(totalRevenue + analytics.kpis.paymentsReceived).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+                <div className="text-[10px] text-stone-400 mt-2">
+                  Cleared & settled · {dateRange.label}
                 </div>
               </div>
 
               {/* Metric 2 */}
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Outstanding Receivables</span>
-                  <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-500">
-                    <Clock className="w-4 h-4" />
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Projected Forecast</span>
+                  <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600">
+                    <Activity className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-amber-500">${outstandingRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                <div className="text-[10px] text-stone-400 mt-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block"></span>
-                  Awaiting bank transfers
+                <div className="text-2xl font-serif font-bold text-[#B06F4B] tabular-nums">
+                  ${analytics.kpis.projectedRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </div>
+                <div className="text-[10px] text-stone-400 mt-2 font-mono tabular-nums">
+                  {analytics.kpis.forecastGrowthPct >= 0 ? '+' : ''}{analytics.kpis.forecastGrowthPct}% projected growth
                 </div>
               </div>
 
@@ -1639,14 +1770,15 @@ export default function MainDashboard() {
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
                   <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Total Invoices Issued</span>
-                  <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
+                  <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500">
                     <FileText className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-stone-100">{totalInvoices} ledger lines</div>
-                <div className="text-[10px] text-stone-400 mt-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 inline-block"></span>
-                  Active corporate billing files
+                <div className={`text-2xl font-serif font-bold tabular-nums ${isDark ? 'text-white' : 'text-stone-900'}`}>
+                  {totalInvoices} ledger lines
+                </div>
+                <div className="text-[10px] text-stone-400 mt-2">
+                  ${outstandingRevenue.toLocaleString()} awaiting transfer
                 </div>
               </div>
 
@@ -1654,45 +1786,153 @@ export default function MainDashboard() {
               <div className={cardStyle}>
                 <div className="flex justify-between items-start mb-3">
                   <span className={`text-[10px] font-bold uppercase tracking-wider ${textMuted}`}>Collection Efficiency</span>
-                  <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
+                  <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-500">
                     <Award className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-serif font-bold text-purple-400">{collectionRate}%</div>
-                <div className="text-[10px] text-stone-400 mt-2 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 inline-block"></span>
-                  Outstanding payment clearance
+                <div className="text-2xl font-serif font-bold text-purple-600 dark:text-purple-400 tabular-nums">{collectionRate}%</div>
+                <div className="text-[10px] text-stone-400 mt-2">
+                  {analytics.kpis.totalConsultations} visits in interval
                 </div>
               </div>
 
             </div>
 
+            {/* Unified Workspace Pulse: Forecast Sparkline + Today's Calendar + Pinned Notes & Tasks */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Forecast Pulse */}
+              <div className={`${cardStyle} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className={`text-sm font-serif font-semibold ${headingStyle}`}>Revenue Forecast Pulse</h3>
+                    <p className="text-[10px] text-stone-400 mt-0.5">{dateRange.label}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('statistics')}
+                    className="text-[11px] font-semibold text-[#B06F4B] hover:underline cursor-pointer"
+                  >
+                    Full Analytics
+                  </button>
+                </div>
+                <div className="h-32">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={analytics.timeSeries} margin={{ top: 6, right: 6, left: -24, bottom: 0 }}>
+                      <XAxis dataKey="label" stroke="#999" fontSize={9} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#999" fontSize={9} tickLine={false} axisLine={false} tickFormatter={(v) => `${Math.round(v / 1000)}k`} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: isDark ? '#18181B' : '#FFFFFF',
+                          borderColor: isDark ? '#27272A' : '#E7E5E4',
+                          borderRadius: '12px',
+                          fontSize: '11px',
+                        }}
+                      />
+                      <Area type="monotone" dataKey="actualRevenue" stroke="#F48FB1" fill="rgba(244,143,177,0.18)" strokeWidth={2} />
+                      <Line type="monotone" dataKey="forecastRevenue" stroke="#4DB6AC" strokeWidth={2} strokeDasharray="4 3" dot={false} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Calendar Snapshot */}
+              <div className={`${cardStyle} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className={`text-sm font-serif font-semibold ${headingStyle}`}>Upcoming Calendar</h3>
+                    <p className="text-[10px] text-stone-400 mt-0.5">{calendarEvents.filter(e => !e.completed).length} scheduled milestones</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('calendar')}
+                    className="text-[11px] font-semibold text-[#B06F4B] hover:underline cursor-pointer"
+                  >
+                    Open Calendar
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {calendarEvents.slice(0, 3).map((ev) => (
+                    <div
+                      key={ev.id}
+                      className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl border ${
+                        isDark ? 'bg-white/[0.03] border-white/8' : 'bg-[#FAF8F5] border-stone-200/60'
+                      }`}
+                    >
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate">{ev.title}</p>
+                        <p className="text-[10px] text-stone-400 font-mono tabular-nums">{ev.date} · {ev.time}</p>
+                      </div>
+                      <span className="text-[10px] font-medium text-[#B06F4B] shrink-0">{ev.category}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pinned Notes & Quick Tasks Snapshot */}
+              <div className={`${cardStyle} flex flex-col justify-between`}>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h3 className={`text-sm font-serif font-semibold ${headingStyle}`}>Clinical Notes & Tasks</h3>
+                    <p className="text-[10px] text-stone-400 mt-0.5">
+                      {notes.length} notes · {tasks.filter(t => !t.completed).length} open tasks
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('notes')}
+                    className="text-[11px] font-semibold text-[#B06F4B] hover:underline cursor-pointer"
+                  >
+                    Open Notes
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {notes.slice(0, 2).map((note) => (
+                    <button
+                      key={note.id}
+                      type="button"
+                      onClick={() => {
+                        setQuickDrawerTab('notes');
+                        setQuickDrawerOpen(true);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-xl border transition-colors cursor-pointer ${
+                        isDark ? 'bg-white/[0.03] border-white/8 hover:bg-white/[0.07]' : 'bg-[#FAF8F5] border-stone-200/60 hover:bg-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-semibold truncate">{note.title}</span>
+                        <span className="text-[10px] text-[#B06F4B] shrink-0">{note.category}</span>
+                      </div>
+                      <p className="text-[10px] text-stone-400 mt-0.5 line-clamp-1">{note.content}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {/* Quick Admin Navigation Panel */}
             <div className={`${cardStyle} p-4 flex flex-col md:flex-row items-center justify-between gap-4`}>
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400">
+                <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-500">
                   <Briefcase className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-stone-100">Administrative Overview Hub</h3>
-                  <p className="text-[10px] text-stone-400">Instantly browse through secondary clinical registers from your main portal:</p>
+                  <h3 className={`text-xs font-bold ${isDark ? 'text-stone-100' : 'text-stone-800'}`}>Administrative Overview Hub</h3>
+                  <p className="text-[10px] text-stone-400">Instantly jump between your clinical registers, planner, and notes:</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {[
                   { tab: 'dashboard', label: 'Billing Queue' },
+                  { tab: 'statistics', label: 'Forecast Analytics' },
+                  { tab: 'calendar', label: 'Calendar' },
+                  { tab: 'notes', label: 'Notes & Tasks' },
                   { tab: 'patients', label: 'Patients Ledger' },
-                  { tab: 'schedule', label: 'Consultations' },
-                  { tab: 'documents', label: 'Compliance Vault' },
-                  { tab: 'settings', label: 'Display & Branding' }
+                  { tab: 'documents', label: 'Compliance Vault' }
                 ].map((item) => (
                   <button
                     key={item.tab}
-                    onClick={() => {
-                      const { setActiveTab } = useStore.getState();
-                      setActiveTab(item.tab as any);
-                    }}
-                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
+                    onClick={() => setActiveTab(item.tab)}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold border transition-all cursor-pointer ${
                       isDark 
                         ? 'border-stone-800 bg-stone-900/40 text-stone-300 hover:border-stone-700 hover:text-white'
                         : 'border-stone-200 bg-stone-50 text-stone-600 hover:border-stone-300 hover:text-stone-900'
@@ -3179,6 +3419,12 @@ export default function MainDashboard() {
             </div>
           </motion.div>
         )}
+
+        {/* TAB: Interactive Monthly Clinical Calendar */}
+        {activeTab === 'calendar' && <CalendarWorkspace />}
+
+        {/* TAB: Clinical Notes & Daily Checklist */}
+        {activeTab === 'notes' && <NotesWorkspace />}
 
       </AnimatePresence>
     </main>

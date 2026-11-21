@@ -8,10 +8,12 @@ import FloatingSidebar from './components/FloatingSidebar';
 import TopNavigation from './components/TopNavigation';
 import MainDashboard from './components/MainDashboard';
 import LoginScreen from './components/LoginScreen';
+import QuickToolsDrawer from './components/QuickToolsDrawer';
+import ToastBanner from './components/ToastBanner';
 import { useStore } from './store';
 
 export default function App() {
-  const { activeTab, sidebarCollapsed, themeMode, isAuthenticated } = useStore();
+  const { sidebarCollapsed, themeMode, isAuthenticated } = useStore();
 
   const isDarkTheme = themeMode === 'dark' || themeMode === 'galaxy';
 
@@ -29,8 +31,8 @@ export default function App() {
       <FloatingSidebar />
 
       {/* Primary Workspace Window (Shifted to the right of the sidebar) */}
-      <div 
-        className={`flex-1 flex flex-col min-h-screen pr-8 py-8 transition-all duration-300 ${
+      <div
+        className={`flex-1 flex flex-col min-h-screen pr-6 md:pr-8 py-6 md:py-8 transition-all duration-300 ${
           sidebarCollapsed ? 'pl-28' : 'pl-72'
         }`}
       >
@@ -40,6 +42,12 @@ export default function App() {
         {/* Dynamic Business Dashboard Views */}
         <MainDashboard />
       </div>
+
+      {/* Global Slide-over Workspace Companion (Notes / Tasks / Calendar) */}
+      <QuickToolsDrawer />
+
+      {/* Global Toast Feedback Banner */}
+      <ToastBanner />
     </div>
   );
 }

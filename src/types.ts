@@ -7,6 +7,7 @@ export interface PatientBill {
   id: string; // e.g. "3586895"
   type: 'Telemedicine' | 'In clinic' | 'Insurance' | 'Consultation';
   sendDate: string;
+  isoDate?: string; // YYYY-MM-DD for accurate date range filtering
   name: string;
   amount: number;
   recipient: string;
@@ -87,4 +88,58 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+}
+
+export type DateRangePreset = '7d' | '30d' | '90d' | 'ytd' | 'all' | 'custom';
+
+export interface DateRangeState {
+  preset: DateRangePreset;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD
+  label: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string; // YYYY-MM-DD
+  time: string;
+  category: 'Clinical' | 'Billing' | 'Follow-up' | 'Personal';
+  description?: string;
+  location?: string;
+  completed?: boolean;
+}
+
+export interface ClinicalNote {
+  id: string;
+  title: string;
+  content: string;
+  category: 'Clinical' | 'Patient Follow-up' | 'Billing' | 'Meeting' | 'Personal';
+  color: 'ivory' | 'sage' | 'blush' | 'sky' | 'lavender';
+  pinned: boolean;
+  updatedAt: string;
+  tags: string[];
+}
+
+export interface DailyTask {
+  id: string;
+  text: string;
+  completed: boolean;
+  priority: 'High' | 'Medium' | 'Low';
+  dueDate?: string;
+}
+
+export interface AppNotification {
+  id: string;
+  title: string;
+  detail: string;
+  time: string;
+  read: boolean;
+  type: 'billing' | 'schedule' | 'system';
+}
+
+export interface ToastItem {
+  id: string;
+  message: string;
+  type: 'success' | 'info' | 'warning';
 }

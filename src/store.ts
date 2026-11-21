@@ -7,8 +7,15 @@ import {
   LearningSubject, 
   LearningEvent,
   PatientRecord,
-  ChatMessage 
+  ChatMessage,
+  DateRangeState,
+  CalendarEvent,
+  ClinicalNote,
+  DailyTask,
+  AppNotification,
+  ToastItem
 } from './types';
+import { getPresetDateRange } from './utils/analyticsData';
 
 interface ClinicalState {
   // Navigation & View Control
@@ -76,6 +83,45 @@ interface ClinicalState {
   clearChat: () => void;
   isChatLoading: boolean;
   sendChatMessage: (content: string) => Promise<void>;
+
+  // Dynamic Date Range Filter
+  dateRange: DateRangeState;
+  setDateRange: (range: DateRangeState) => void;
+
+  // Interactive Calendar Events
+  calendarEvents: CalendarEvent[];
+  addCalendarEvent: (event: Omit<CalendarEvent, 'id'>) => void;
+  toggleCalendarEvent: (id: string) => void;
+  deleteCalendarEvent: (id: string) => void;
+
+  // Clinical Notes & Scratchpad
+  notes: ClinicalNote[];
+  addNote: (note: Omit<ClinicalNote, 'id' | 'updatedAt'>) => void;
+  updateNote: (id: string, patch: Partial<ClinicalNote>) => void;
+  deleteNote: (id: string) => void;
+  togglePinNote: (id: string) => void;
+
+  // Daily Tasks & Checklist
+  tasks: DailyTask[];
+  addTask: (text: string, priority?: DailyTask['priority'], dueDate?: string) => void;
+  toggleTask: (id: string) => void;
+  deleteTask: (id: string) => void;
+
+  // Notifications
+  notifications: AppNotification[];
+  markNotificationRead: (id: string) => void;
+  markAllNotificationsRead: () => void;
+
+  // Slide-over Quick Tools Drawer
+  quickDrawerOpen: boolean;
+  setQuickDrawerOpen: (open: boolean) => void;
+  quickDrawerTab: 'notes' | 'tasks' | 'calendar';
+  setQuickDrawerTab: (tab: 'notes' | 'tasks' | 'calendar') => void;
+
+  // Toast Notification
+  toast: ToastItem | null;
+  showToast: (message: string, type?: ToastItem['type']) => void;
+  clearToast: () => void;
 }
 
 export const useStore = create<ClinicalState>((set, get) => ({
@@ -158,20 +204,22 @@ export const useStore = create<ClinicalState>((set, get) => ({
     {
       id: "3586895",
       type: 'Telemedicine',
-      sendDate: '12/12/24',
+      sendDate: '11/19/26',
+      isoDate: '2026-11-19',
       name: 'Rachel Meyers',
       amount: 345.65,
       recipient: '123456 American Family Insurance',
-      dueDate: '12/12/24',
+      dueDate: '11/28/26',
       status: 'Requested',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80'
     },
     {
       id: "4829304",
       type: 'In clinic',
-      sendDate: '12/12/24',
+      sendDate: '11/17/26',
+      isoDate: '2026-11-17',
       name: 'Samantha Williams',
-      amount: 345.65,
+      amount: 420.00,
       recipient: 'Samantha Williams',
       dueDate: '-',
       status: 'Paid',
@@ -180,20 +228,22 @@ export const useStore = create<ClinicalState>((set, get) => ({
     {
       id: "9283748",
       type: 'Insurance',
-      sendDate: '12/12/24',
+      sendDate: '11/15/26',
+      isoDate: '2026-11-15',
       name: 'Amy White',
-      amount: 345.65,
+      amount: 295.50,
       recipient: '123324 GEICO',
-      dueDate: '12/12/24',
+      dueDate: '11/30/26',
       status: 'Sent',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80'
     },
     {
       id: "5849203",
       type: 'In clinic',
-      sendDate: '12/12/24',
+      sendDate: '11/10/26',
+      isoDate: '2026-11-10',
       name: 'Tyler Young',
-      amount: 345.65,
+      amount: 510.00,
       recipient: '123456 American Family Insurance',
       dueDate: '-',
       status: 'Paid',
@@ -202,33 +252,36 @@ export const useStore = create<ClinicalState>((set, get) => ({
     {
       id: "3920194",
       type: 'Telemedicine',
-      sendDate: '12/12/24',
+      sendDate: '10/28/26',
+      isoDate: '2026-10-28',
       name: 'Amy White',
-      amount: 345.65,
+      amount: 185.00,
       recipient: '123324 GEICO',
-      dueDate: '12/12/24',
+      dueDate: '11/12/26',
       status: 'Paid',
       avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80'
     },
     {
       id: "2930492",
       type: 'Telemedicine',
-      sendDate: '12/12/24',
+      sendDate: '10/14/26',
+      isoDate: '2026-10-14',
       name: 'Rachel Meyers',
       amount: 345.65,
       recipient: '123456 American Family Insurance',
-      dueDate: '12/12/24',
+      dueDate: '10/28/26',
       status: 'Requested',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80'
     },
     {
       id: "1930294",
       type: 'Insurance',
-      sendDate: '12/12/24',
+      sendDate: '09/22/26',
+      isoDate: '2026-09-22',
       name: 'Rachel Meyers',
-      amount: 345.65,
+      amount: 640.00,
       recipient: '123456 American Family Insurance',
-      dueDate: '12/12/24',
+      dueDate: '10/06/26',
       status: 'Paid',
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80'
     }
@@ -657,5 +710,231 @@ export const useStore = create<ClinicalState>((set, get) => ({
     } finally {
       set({ isChatLoading: false });
     }
-  }
+  },
+
+  // Dynamic Date Range Filter
+  dateRange: getPresetDateRange('90d'),
+  setDateRange: (range) => set({ dateRange: range }),
+
+  // Interactive Calendar Events
+  calendarEvents: [
+    {
+      id: 'cal-1',
+      title: 'Quarterly Revenue & Forecast Review',
+      date: '2026-11-21',
+      time: '10:30 AM',
+      category: 'Billing',
+      location: 'Boardroom B',
+      description: 'Review Q4 insurance collection velocity and December projections with finance lead.',
+      completed: false
+    },
+    {
+      id: 'cal-2',
+      title: 'Rachel Meyers — Post-Op Telehealth Check',
+      date: '2026-11-21',
+      time: '02:00 PM',
+      category: 'Follow-up',
+      location: 'Intelly Video Suite',
+      description: 'Review blood panel lab metrics and confirm prescription dosage.',
+      completed: false
+    },
+    {
+      id: 'cal-3',
+      title: 'Geriatric CKD Protocol Audit',
+      date: '2026-11-23',
+      time: '09:00 AM',
+      category: 'Clinical',
+      location: 'Room 102',
+      description: 'Monthly case conference with resident team and nephrology specialist.',
+      completed: false
+    },
+    {
+      id: 'cal-4',
+      title: 'GEICO Batch Insurance Claims Submission',
+      date: '2026-11-25',
+      time: '04:00 PM',
+      category: 'Billing',
+      location: 'Billing Portal',
+      description: 'Submit November CPT 99213 & 99214 claims prior to end-of-month cutoff.',
+      completed: false
+    },
+    {
+      id: 'cal-5',
+      title: 'Samantha Williams — Annual Eye & Wellness Exam',
+      date: '2026-11-27',
+      time: '11:15 AM',
+      category: 'Clinical',
+      location: 'Clinic Suite 304',
+      description: 'Follow-up ophthalmology screening and annual preventive care update.',
+      completed: false
+    },
+    {
+      id: 'cal-6',
+      title: 'CME Ethics & Telehealth Workshop',
+      date: '2026-11-18',
+      time: '01:00 PM',
+      category: 'Personal',
+      location: 'Online Webinar',
+      description: 'Accredited 2-hour seminar on digital consent workflows.',
+      completed: true
+    }
+  ],
+  addCalendarEvent: (event) => set((state) => ({
+    calendarEvents: [
+      { ...event, id: `cal-${Date.now()}` },
+      ...state.calendarEvents
+    ]
+  })),
+  toggleCalendarEvent: (id) => set((state) => ({
+    calendarEvents: state.calendarEvents.map((ev) =>
+      ev.id === id ? { ...ev, completed: !ev.completed } : ev
+    )
+  })),
+  deleteCalendarEvent: (id) => set((state) => ({
+    calendarEvents: state.calendarEvents.filter((ev) => ev.id !== id)
+  })),
+
+  // Clinical Notes & Scratchpad
+  notes: [
+    {
+      id: 'note-1',
+      title: 'Q4 Clinical Revenue & Collection Notes',
+      content: 'Telemedicine billing cycle averaged 9.2 days to payout this quarter (down from 14 days). Prioritize automated reminder dispatch for American Family Insurance claims over $300 before Dec 1.',
+      category: 'Billing',
+      color: 'ivory',
+      pinned: true,
+      updatedAt: 'Nov 21, 2026 • 09:40 AM',
+      tags: ['Q4', 'Revenue', 'Insurance']
+    },
+    {
+      id: 'note-2',
+      title: 'Rachel Meyers — Follow-up Observations',
+      content: 'Patient reported improved energy levels after dosage adjustment. Double-check latest metabolic panel during today\'s 2:00 PM video consult and schedule 6-week in-clinic review.',
+      category: 'Patient Follow-up',
+      color: 'sage',
+      pinned: true,
+      updatedAt: 'Nov 20, 2026 • 05:15 PM',
+      tags: ['Telehealth', 'Labs']
+    },
+    {
+      id: 'note-3',
+      title: 'Team Planning Agenda (Room 200)',
+      content: '1. Onboard new resident onto Intelly ICD-10 quick codes.\n2. Confirm holiday coverage roster for December.\n3. Standardize pre-visit intake questionnaire for geriatric patients.',
+      category: 'Meeting',
+      color: 'sky',
+      pinned: false,
+      updatedAt: 'Nov 19, 2026 • 11:20 AM',
+      tags: ['Team', 'Operations']
+    },
+    {
+      id: 'note-4',
+      title: 'Pharmacology CME Reading Takeaways',
+      content: 'Key update on renal dosing thresholds for elderly outpatients with Stage 3 CKD. Bookmark reference chart in Documents Base for quick consultation access.',
+      category: 'Clinical',
+      color: 'lavender',
+      pinned: false,
+      updatedAt: 'Nov 17, 2026 • 03:05 PM',
+      tags: ['CKD', 'Protocol']
+    }
+  ],
+  addNote: (note) => set((state) => ({
+    notes: [
+      {
+        ...note,
+        id: `note-${Date.now()}`,
+        updatedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • Just now'
+      },
+      ...state.notes
+    ]
+  })),
+  updateNote: (id, patch) => set((state) => ({
+    notes: state.notes.map((n) =>
+      n.id === id
+        ? {
+            ...n,
+            ...patch,
+            updatedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' • Updated'
+          }
+        : n
+    )
+  })),
+  deleteNote: (id) => set((state) => ({
+    notes: state.notes.filter((n) => n.id !== id)
+  })),
+  togglePinNote: (id) => set((state) => ({
+    notes: state.notes.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n))
+  })),
+
+  // Daily Tasks & Checklist
+  tasks: [
+    { id: 'tsk-1', text: 'Approve & export Q4 analytical report for board review', completed: false, priority: 'High', dueDate: '2026-11-21' },
+    { id: 'tsk-2', text: 'Send payment request for Samantha Williams check-up ($145)', completed: false, priority: 'High', dueDate: '2026-11-21' },
+    { id: 'tsk-3', text: 'Sign off Tyler Young cardiology diagnostic screen summary', completed: true, priority: 'Medium', dueDate: '2026-11-20' },
+    { id: 'tsk-4', text: 'Update CPT 99214 reimbursement table for Q1 2027', completed: false, priority: 'Low', dueDate: '2026-11-26' }
+  ],
+  addTask: (text, priority = 'Medium', dueDate) => set((state) => ({
+    tasks: [
+      { id: `tsk-${Date.now()}`, text, completed: false, priority, dueDate },
+      ...state.tasks
+    ]
+  })),
+  toggleTask: (id) => set((state) => ({
+    tasks: state.tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+  })),
+  deleteTask: (id) => set((state) => ({
+    tasks: state.tasks.filter((t) => t.id !== id)
+  })),
+
+  // Notifications
+  notifications: [
+    {
+      id: 'notif-1',
+      title: 'GEICO Insurance Settlement Cleared',
+      detail: '$568.56 deposited to IntellyMed operating account.',
+      time: '15 min ago',
+      read: false,
+      type: 'billing'
+    },
+    {
+      id: 'notif-2',
+      title: 'Upcoming Telehealth Consult',
+      detail: 'Rachel Meyers joins Video Suite at 02:00 PM today.',
+      time: '45 min ago',
+      read: false,
+      type: 'schedule'
+    },
+    {
+      id: 'notif-3',
+      title: 'Forecast Updated for December',
+      detail: 'Projected clinical revenue increased +8.6% based on Q4 volume.',
+      time: '2 hrs ago',
+      read: true,
+      type: 'system'
+    }
+  ],
+  markNotificationRead: (id) => set((state) => ({
+    notifications: state.notifications.map((n) => (n.id === id ? { ...n, read: true } : n))
+  })),
+  markAllNotificationsRead: () => set((state) => ({
+    notifications: state.notifications.map((n) => ({ ...n, read: true }))
+  })),
+
+  // Slide-over Quick Tools Drawer
+  quickDrawerOpen: false,
+  setQuickDrawerOpen: (open) => set({ quickDrawerOpen: open }),
+  quickDrawerTab: 'notes',
+  setQuickDrawerTab: (tab) => set({ quickDrawerTab: tab }),
+
+  // Toast Notification
+  toast: null,
+  showToast: (message, type = 'success') => {
+    const id = `toast-${Date.now()}`;
+    set({ toast: { id, message, type } });
+    setTimeout(() => {
+      if (get().toast?.id === id) {
+        set({ toast: null });
+      }
+    }, 3400);
+  },
+  clearToast: () => set({ toast: null })
 }));
